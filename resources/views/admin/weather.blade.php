@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Get-Content storage/logs/laravel.log -Tail 40nslookup www.googleapis.com<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">

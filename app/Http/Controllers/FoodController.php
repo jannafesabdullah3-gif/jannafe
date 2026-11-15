@@ -1,7 +1,9 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Food;
 use Illuminate\Http\Request;
 
@@ -9,57 +11,49 @@ class FoodController extends Controller
 {
     public function index()
     {
-        $foods = Food::orderBy('created_at', 'desc')->get();
+        $foods = Food::latest()->get();
 
-        return view('admin.foods.index', compact('foods'));
+        return view('admin.foods', compact('foods'));
     }
 
     public function create()
     {
-        return view('admin.foods.create');
+        return view('admin.foods-create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'availability' => 'required|in:available,unavailable',
         ]);
 
-        Food::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'availability' => $request->availability,
-        ]);
+        Food::create($validated);
 
         return redirect()
             ->route('admin.foods')
-            ->with('success', 'Food added successfully.');
+            ->with('success', 'Food added successfully!');
     }
 
     public function edit(Food $food)
     {
-        return view('admin.foods.edit', compact('food'));
+        return view('admin.foods-edit', compact('food'));
     }
 
     public function update(Request $request, Food $food)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'availability' => 'required|in:available,unavailable',
         ]);
 
-        $food->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'availability' => $request->availability,
-        ]);
+        $food->update($validated);
 
         return redirect()
             ->route('admin.foods')
-            ->with('success', 'Food updated successfully.');
+            ->with('success', 'Food updated successfully!');
     }
 
     public function destroy(Food $food)
@@ -68,6 +62,6 @@ class FoodController extends Controller
 
         return redirect()
             ->route('admin.foods')
-            ->with('success', 'Food deleted successfully.');
+            ->with('success', 'Food deleted successfully!');
     }
 }
